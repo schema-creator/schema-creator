@@ -1,0 +1,43 @@
+services:  
+  postgres:
+    build:
+      context: .docker/postgres
+      dockerfile: Dockerfile
+    volumes:
+      - .docker/data/postgres:/var/lib/postgresql/data
+      - .docker/postgres/init.d:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: schema_creator
+
+  backend:
+    build:
+      context: .docker/app
+      dockerfile: local.Dockerfile
+    platform: linux/amd64
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/app
+    environment:
+      - DATABASE_HOST=postgres
+    depends_on:
+      - postgres
+  
+  kuiperbelt:
+    build:
+      context: .docker/kuiperbelt
+      dockerfile: Dockerfile
+    ports:
+      - 12345:12345
+    environment:
+      - EKBO_PORT=12345
+      - EKBO_CONNECT_PATH=/socket.io/
+      - EKBO_CONNECT_CALLBACK_URL=http://webapp:12346/connect
+      - EKBO_RECEIVE_CALLBACK_URL=http://webapp:12346/receive
+      - EKBO_SELF_ENDPOINT_URL=kuiperbelt:12345
+    depends_on:
+      - backend

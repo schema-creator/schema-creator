@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "root",
+			"path": "."
+		},
+    {
+			"name": "backend",
+			"path": "backend"
+		},
+	],
+	"settings": {
+		"explorer.fileNesting.enabled": true,
+		"explorer.fileNesting.expand": false,
+		"explorer.fileNesting.patterns": {
+			"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb, human-readable.lock",
+			"*.go": "${capture}_test.go",
+			".env": ".env.*",
+			"*.md": "${capture}.go, ${capture}_*.go"
+		}
+	}
+}

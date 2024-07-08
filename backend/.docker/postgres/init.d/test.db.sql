@@ -1,0 +1,1 @@
+CREATE DATABASE "schema_creator_test";

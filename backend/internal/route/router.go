@@ -8,6 +8,7 @@ import (
 	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/controller"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/container"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/framework/cookie"
+	v1 "github.com/schema-creator/schema-creator/schema-creator/internal/route/v1"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/usecase/interactor"
 )
 
@@ -31,7 +32,13 @@ func NewRouter() http.Handler {
 	corsRoute := router.echo.Group("")
 
 	corsRoute.Use(echoMiddleware.CORSWithConfig(echoMiddleware.DefaultCORSConfig))
+	{
+		router.GoogleLogin(corsRoute)
+		router.GitHubLogin(corsRoute)
 
+		v1Group := corsRoute.Group("/v1")
+		v1.Setup(v1Group)
+	}
 	return router.echo
 }
 
@@ -46,5 +53,13 @@ func (r *router) GoogleLogin(corsRoute *echo.Group) {
 	cookieSetter := container.Invoke[*cookie.CookieSetter]()
 
 	corsRoute.POST("/login/google", controller.GoogleLogin(googleLogin, cookieSetter))
+
+}
+
+func (r *router) GitHubLogin(corsRoute *echo.Group) {
+	gitHubLogin := container.Invoke[*interactor.GitHubLogin]()
+	cookieSetter := container.Invoke[*cookie.CookieSetter]()
+
+	corsRoute.POST("/login/github", controller.GitHubLogin(gitHubLogin, cookieSetter))
 
 }

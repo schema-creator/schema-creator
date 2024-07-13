@@ -8,8 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/gateway/authz"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/entities/model"
-
-	// 	"github.com/hal-cinema-2024/backend/internal/framework/herror"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/framework/herror"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/usecase/dai"
 )
 
@@ -66,10 +65,10 @@ func (gl *GoogleLogin) GoogleLogin(ctx context.Context, authorizationCode, userA
 			_, err := gl.repositories.CreateUser(ctx, &model.User{
 				UserID:    userInfo.UserID,
 				Email:     userInfo.Email,
-				IconPath:  userInfo.Icon,
+				Icon:      userInfo.Icon,
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
-				IsDelete:  false,
+				IsDeleted: false,
 			})
 
 			if err != nil {

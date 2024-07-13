@@ -3,6 +3,7 @@ package interactor
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/gateway/authz"
@@ -60,11 +61,16 @@ func (gl *GitHubLogin) GitHubLogin(ctx context.Context, authorizationCode, userA
 
 	if err := gl.repositories.Transaction(ctx, func(ctx context.Context, tx dai.DataAccessInterfaces) error {
 		if !found {
-			user := &model.User{
-				UserID: userInfo.UserID,
-				Icon:   userInfo.Icon,
-			}
-			if _, err := tx.UserRepo.SyncUser(ctx, user); err != nil {
+			_, err := gl.repositories.CreateUser(ctx, &model.User{
+				UserID:    userInfo.UserID,
+				Email:     userInfo.Email,
+				Icon:      userInfo.Icon,
+				CreatedAt: time.Now(),
+				UpdatedAt: time.Now(),
+				IsDeleted: false,
+			})
+
+			if err != nil {
 				return err
 			}
 		}
@@ -75,7 +81,7 @@ func (gl *GitHubLogin) GitHubLogin(ctx context.Context, authorizationCode, userA
 			UserAgent:      userAgent,
 			ExpirationTime: int32(token.Expiry.Unix()),
 		}
-		if _, err := tx.SessionRepo.SyncSession(ctx, session); err != nil {
+		if _, err := gl.repositories.SyncSession(ctx, session); err != nil {
 			return err
 		}
 
@@ -83,4 +89,9 @@ func (gl *GitHubLogin) GitHubLogin(ctx context.Context, authorizationCode, userA
 	}); err != nil {
 		return nil, err
 	}
+	return &LoginResult{
+		SessionID: sessionID.String(),
+		UserID:    userInfo.UserID,
+		Icon:      userInfo.Icon,
+	}, nil
 }

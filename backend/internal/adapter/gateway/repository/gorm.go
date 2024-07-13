@@ -9,11 +9,15 @@ import (
 
 type GormRepo struct {
 	gorm *gorm.DB
+	*UserRepo
+	*SessionRepo
 }
 
 func NewGormRepo(gorm *gorm.DB) *GormRepo {
 	return &GormRepo{
-		gorm: gorm,
+		gorm:        gorm,
+		UserRepo:    NewUserRepo(gorm),
+		SessionRepo: NewSessionRepo(gorm),
 	}
 }
 

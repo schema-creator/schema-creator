@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/schema-creator/schema-creator/schema-creator/internal/entities/model"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/framework/herror"
 	"gorm.io/gorm"
 )
 
@@ -26,38 +27,38 @@ func (r *UserRepo) CreateUser(ctx context.Context, user *model.User) (*model.Use
 	return user, nil
 }
 
-// func (r *UserRepo) GetUserByID(ctx context.Context, userID string) (*model.User, error) {
-// 	var (
-// 		user  model.User
-// 		count int64
-// 	)
+func (r *UserRepo) GetUserByID(ctx context.Context, userID string) (*model.User, error) {
+	var (
+		user  model.User
+		count int64
+	)
 
-// 	result := r.db.Model(&user).Where("user_id = ?", userID).Find(&user).Count(&count)
-// 	if result.Error != nil {
-// 		return nil, result.Error
-// 	}
+	result := r.db.Model(&user).Where("user_id = ?", userID).Find(&user).Count(&count)
+	if result.Error != nil {
+		return nil, result.Error
+	}
 
-// 	if count == 0 {
-// 		return nil, herror.ErrResourceNotFound
-// 	}
+	if count == 0 {
+		return nil, herror.ErrResourceNotFound
+	}
 
-// 	if user.IsDelete {
-// 		return nil, herror.ErrResourceDeleted
-// 	}
+	if user.IsDeleted {
+		return nil, herror.ErrResourceDeleted
+	}
 
-// 	return &user, nil
-// }
+	return &user, nil
+}
 
-// func (r *UserRepo) GetUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
-// 	var users []model.User
-// 	result := r.db.Model(model.User{}).Where("is_delete = ?", false).Limit(limit).Offset(offset).Find(&users)
+func (r *UserRepo) GetUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
+	var users []model.User
+	result := r.db.Model(model.User{}).Where("is_deleted = ?", false).Limit(limit).Offset(offset).Find(&users)
 
-// 	if result.Error != nil {
-// 		return nil, result.Error
-// 	}
+	if result.Error != nil {
+		return nil, result.Error
+	}
 
-// 	return users, nil
-// }
+	return users, nil
+}
 
 // func (r *UserRepo) UpdateUser(ctx context.Context, userID string, user *model.User) (*model.User, error) {
 // 	saveUser := make(map[string]any)

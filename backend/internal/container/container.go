@@ -1,7 +1,11 @@
 package container
 
 import (
+	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/gateway/authz/github"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/gateway/authz/google"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/driver/db"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/framework/cookie"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/usecase/interactor"
 	"go.uber.org/dig"
 )
 
@@ -18,6 +22,13 @@ func NewContainer() error {
 	args := []provideArg{
 		{constructor: db.Connect, opts: []dig.ProvideOption{}},
 		{constructor: db.NewGORM, opts: []dig.ProvideOption{}},
+		{constructor: cookie.DefaultCookieOptions, opts: []dig.ProvideOption{}},
+		{constructor: cookie.NewCookieSetter, opts: []dig.ProvideOption{}},
+		{constructor: google.NewOAuth, opts: []dig.ProvideOption{}},
+		{constructor: github.NewOAuth, opts: []dig.ProvideOption{}},
+		{constructor: interactor.NewGoogleLogin, opts: []dig.ProvideOption{}},
+		{constructor: interactor.NewGitHubLogin, opts: []dig.ProvideOption{}},
+		{constructor: interactor.NewSessionInteractor, opts: []dig.ProvideOption{}},
 	}
 
 	for _, arg := range args {

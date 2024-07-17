@@ -13,12 +13,12 @@ import (
 )
 
 type GoogleLogin struct {
-	authz        authz.OAuth2
+	authz        authz.GoogleOAuth2
 	repositories dai.DataAccessInterfaces
 }
 
 func NewGoogleLogin(
-	authz authz.OAuth2,
+	authz authz.GoogleOAuth2,
 	repositories dai.DataAccessInterfaces,
 ) *GoogleLogin {
 	return &GoogleLogin{

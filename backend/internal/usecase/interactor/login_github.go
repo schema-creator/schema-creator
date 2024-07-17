@@ -13,12 +13,12 @@ import (
 )
 
 type GitHubLogin struct {
-	authz        authz.OAuth2
+	authz        authz.GitHubOAuth2
 	repositories dai.DataAccessInterfaces
 }
 
 func NewGitHubLogin(
-	authz authz.OAuth2,
+	authz authz.GitHubOAuth2,
 	repositories dai.DataAccessInterfaces,
 ) *GitHubLogin {
 	return &GitHubLogin{

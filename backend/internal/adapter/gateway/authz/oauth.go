@@ -6,7 +6,11 @@ import (
 	"golang.org/x/oauth2"
 )
 
-type OAuth2 interface {
+type GoogleOAuth2 interface {
+	FetchToken(ctx context.Context, authorizationCode string) (*oauth2.Token, error)
+	GetUserInfo(ctx context.Context, token *oauth2.Token) (*UserInfo, error)
+}
+type GitHubOAuth2 interface {
 	FetchToken(ctx context.Context, authorizationCode string) (*oauth2.Token, error)
 	GetUserInfo(ctx context.Context, token *oauth2.Token) (*UserInfo, error)
 }

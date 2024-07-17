@@ -11,30 +11,36 @@ import (
 	"google.golang.org/api/option"
 )
 
-type OAuth2 struct {
+type GoogleOAuth2 struct {
 	oac oauth2.Config
 }
+type GoogleOAuth2Config struct {
+	*oauth2.Config
+}
 
-func DefaultOAuth2Config() oauth2.Config {
-	return oauth2.Config{
-		ClientID:     config.Config.Google.ClientID,
-		ClientSecret: config.Config.Google.ClientSecret,
-		Scopes:       []string{},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://accounts.google.com/o/oauth2/auth",
-			TokenURL: "https://accounts.google.com/o/oauth2/token",
+func DefaultGoogleOAuth2Config() GoogleOAuth2Config {
+	return GoogleOAuth2Config{
+		Config: &oauth2.Config{
+			ClientID:     config.Config.Google.ClientID,
+			ClientSecret: config.Config.Google.ClientSecret,
+			Scopes:       []string{},
+			Endpoint: oauth2.Endpoint{
+				AuthURL:  "https://accounts.google.com/o/oauth2/auth",
+				TokenURL: "https://accounts.google.com/o/oauth2/token",
+			},
+			RedirectURL: config.Config.Google.RedirectURI,
 		},
-		RedirectURL: config.Config.Google.RedirectURI,
+	}
+
+}
+
+func NewGoogleOAuth(oac GoogleOAuth2Config) *GoogleOAuth2 {
+	return &GoogleOAuth2{
+		oac: *oac.Config,
 	}
 }
 
-func NewOAuth(oac oauth2.Config) *OAuth2 {
-	return &OAuth2{
-		oac: oac,
-	}
-}
-
-func (o *OAuth2) FetchToken(ctx context.Context, code string) (*oauth2.Token, error) {
+func (o *GoogleOAuth2) FetchToken(ctx context.Context, code string) (*oauth2.Token, error) {
 	token, err := o.oac.Exchange(ctx, code)
 	if err != nil {
 		return nil, err
@@ -43,7 +49,7 @@ func (o *OAuth2) FetchToken(ctx context.Context, code string) (*oauth2.Token, er
 	return token, nil
 }
 
-func (o *OAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*authz.UserInfo, error) {
+func (o *GoogleOAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*authz.UserInfo, error) {
 	client := o.oac.Client(ctx, token)
 
 	service, err := v2.NewService(ctx, option.WithHTTPClient(client))
@@ -63,4 +69,4 @@ func (o *OAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*authz.U
 	}, nil
 }
 
-var _ authz.OAuth2 = (*OAuth2)(nil)
+var _ authz.GoogleOAuth2 = (*GoogleOAuth2)(nil)

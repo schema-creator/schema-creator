@@ -10,30 +10,35 @@ import (
 	"google.golang.org/api/option"
 )
 
-type OAuth2 struct {
+type GitHubOAuth2 struct {
 	oac oauth2.Config
 }
+type GitHubOAuth2Config struct {
+	*oauth2.Config
+}
 
-func DefaultOAuth2Config() oauth2.Config {
-	return oauth2.Config{
-		ClientID:     config.Config.Github.ClientID,
-		ClientSecret: "github_client_secret",
-		Scopes:       []string{},
-		Endpoint: oauth2.Endpoint{
-			AuthURL:  "https://github.com/login/oauth/authorize",
-			TokenURL: "https://github.com/login/oauth/access_token",
+func DefaultGitHubOAuth2Config() GitHubOAuth2Config {
+	return GitHubOAuth2Config{
+		Config: &oauth2.Config{
+			ClientID:     config.Config.Github.ClientID,
+			ClientSecret: "github_client_secret",
+			Scopes:       []string{},
+			Endpoint: oauth2.Endpoint{
+				AuthURL:  "https://github.com/login/oauth/authorize",
+				TokenURL: "https://github.com/login/oauth/access_token",
+			},
+			RedirectURL: "",
 		},
-		RedirectURL: "",
 	}
 }
 
-func NewOAuth(oac oauth2.Config) *OAuth2 {
-	return &OAuth2{
-		oac: oac,
+func NewGitHubOAuth(oac GitHubOAuth2Config) *GitHubOAuth2 {
+	return &GitHubOAuth2{
+		oac: *oac.Config,
 	}
 }
 
-func (o *OAuth2) FetchToken(ctx context.Context, code string) (*oauth2.Token, error) {
+func (o *GitHubOAuth2) FetchToken(ctx context.Context, code string) (*oauth2.Token, error) {
 	token, err := o.oac.Exchange(ctx, code)
 	if err != nil {
 		return nil, err
@@ -42,7 +47,7 @@ func (o *OAuth2) FetchToken(ctx context.Context, code string) (*oauth2.Token, er
 	return token, nil
 }
 
-func (o *OAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*authz.UserInfo, error) {
+func (o *GitHubOAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*authz.UserInfo, error) {
 	client := o.oac.Client(ctx, token)
 
 	service, err := v2.NewService(ctx, option.WithHTTPClient(client))
@@ -62,4 +67,4 @@ func (o *OAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*authz.U
 	}, nil
 }
 
-var _ authz.OAuth2 = (*OAuth2)(nil)
+var _ authz.GitHubOAuth2 = (*GitHubOAuth2)(nil)

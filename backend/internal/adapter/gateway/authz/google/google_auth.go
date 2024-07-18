@@ -23,7 +23,7 @@ func DefaultGoogleOAuth2Config() GoogleOAuth2Config {
 		Config: &oauth2.Config{
 			ClientID:     config.Config.Google.ClientID,
 			ClientSecret: config.Config.Google.ClientSecret,
-			Scopes:       []string{},
+			Scopes:       []string{v2.UserinfoEmailScope, v2.UserinfoProfileScope},
 			Endpoint: oauth2.Endpoint{
 				AuthURL:  "https://accounts.google.com/o/oauth2/auth",
 				TokenURL: "https://accounts.google.com/o/oauth2/token",
@@ -64,6 +64,7 @@ func (o *GoogleOAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*a
 
 	return &authz.UserInfo{
 		UserID: googleUser.Id,
+		Name:   googleUser.Name,
 		Email:  googleUser.Email,
 		Icon:   googleUser.Picture,
 	}, nil

@@ -62,6 +62,7 @@ func (o *GitHubOAuth2) GetUserInfo(ctx context.Context, token *oauth2.Token) (*a
 
 	return &authz.UserInfo{
 		UserID: gitHubUser.Id,
+		Name:   gitHubUser.Name,
 		Email:  gitHubUser.Email,
 		Icon:   gitHubUser.Picture,
 	}, nil

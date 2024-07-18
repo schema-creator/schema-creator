@@ -17,6 +17,7 @@ type GitHubOAuth2 interface {
 
 type UserInfo struct {
 	UserID string
+	Name   string
 	Email  string
 	Icon   string
 }

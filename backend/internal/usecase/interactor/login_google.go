@@ -30,6 +30,8 @@ func NewGoogleLogin(
 type LoginResult struct {
 	SessionID string
 	UserID    string
+	Name      string
+	Email     string
 	Icon      string
 }
 
@@ -64,6 +66,7 @@ func (gl *GoogleLogin) GoogleLogin(ctx context.Context, authorizationCode, userA
 		if !found {
 			_, err := gl.repositories.CreateUser(ctx, &model.User{
 				UserID:    userInfo.UserID,
+				Name:      userInfo.Name,
 				Email:     userInfo.Email,
 				Icon:      userInfo.Icon,
 				CreatedAt: time.Now(),
@@ -97,6 +100,8 @@ func (gl *GoogleLogin) GoogleLogin(ctx context.Context, authorizationCode, userA
 	return &LoginResult{
 		SessionID: sessionID.String(),
 		UserID:    userInfo.UserID,
+		Name:      userInfo.Name,
+		Email:     userInfo.Email,
 		Icon:      userInfo.Icon,
 	}, nil
 }

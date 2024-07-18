@@ -5,6 +5,7 @@ import (
 
 	"github.com/schema-creator/schema-creator/schema-creator/internal/entities/model"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/framework/herror"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/usecase/dai"
 	"gorm.io/gorm"
 )
 
@@ -124,4 +125,4 @@ func (r *UserRepo) GetUsers(ctx context.Context, limit, offset int) ([]model.Use
 // 	return nil
 // }
 
-// var _ dai.UserRepo = (*UserRepo)(nil)
+var _ dai.UserRepo = (*UserRepo)(nil)

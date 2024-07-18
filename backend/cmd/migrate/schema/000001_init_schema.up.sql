@@ -30,7 +30,7 @@ CREATE TABLE "project_has_users" (
 );
 
 CREATE TABLE "users" (
-  "user_id" varchar(16) PRIMARY KEY,
+  "user_id" varchar(48) PRIMARY KEY,
   "email" varchar(255) NOT NULL,
   "name" varchar(255) NOT NULL,
   "icon" text NOT NULL,

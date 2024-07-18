@@ -27,7 +27,7 @@ func DefaultGitHubOAuth2Config() GitHubOAuth2Config {
 				AuthURL:  "https://github.com/login/oauth/authorize",
 				TokenURL: "https://github.com/login/oauth/access_token",
 			},
-			RedirectURL: "",
+			RedirectURL: config.Config.Github.RedirectURI,
 		},
 	}
 }

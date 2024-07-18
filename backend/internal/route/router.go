@@ -6,6 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 	echoMiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/controller"
+	"github.com/schema-creator/schema-creator/schema-creator/internal/adapter/middleware"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/container"
 	"github.com/schema-creator/schema-creator/schema-creator/internal/framework/cookie"
 	v1 "github.com/schema-creator/schema-creator/schema-creator/internal/route/v1"
@@ -24,7 +25,7 @@ func NewRouter() http.Handler {
 
 	// setup middleware
 	router.echo.Use(echoMiddleware.Recover())
-
+	router.echo.Use(middleware.GetUserAgent())
 	// router.echo.Use(echoprometheus.NewMiddleware("hal-cinema"))
 
 	router.health()

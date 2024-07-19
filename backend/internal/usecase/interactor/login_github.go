@@ -27,12 +27,6 @@ func NewGitHubLogin(
 	}
 }
 
-// type LoginResult struct {
-// 	SessionID string
-// 	UserID    string
-// 	Icon      string
-// }
-
 func (gl *GitHubLogin) GitHubLogin(ctx context.Context, authorizationCode, userAgent string) (*LoginResult, error) {
 	token, err := gl.authz.FetchToken(ctx, authorizationCode)
 	if err != nil {

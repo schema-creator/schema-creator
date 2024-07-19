@@ -74,6 +74,7 @@ func (gl *GitHubLogin) GitHubLogin(ctx context.Context, authorizationCode, userA
 			SessionID:      sessionID.String(),
 			UserID:         userInfo.UserID,
 			UserAgent:      userAgent,
+			Token:          token.AccessToken,
 			ExpirationTime: int32(token.Expiry.Unix()),
 		}
 		if _, err := gl.repositories.SyncSession(ctx, session); err != nil {

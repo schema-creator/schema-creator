@@ -25,4 +25,16 @@ type config struct {
 		Password string `env:"DATABASE_PASSWORD"`
 		Name     string `env:"DATABASE_NAME"`
 	}
+
+	Google struct {
+		ClientID     string `env:"GOOGLE_CLIENT_ID"`
+		ClientSecret string `env:"GOOGLE_CLIENT_SECRET"`
+		RedirectURI  string `env:"GOOGLE_REDIRECT_URI"`
+	}
+
+	Github struct {
+		ClientID     string `env:"GITHUB_CLIENT_ID"`
+		ClientSecret string `env:"GITHUB_CLIENT_SECRET"`
+		RedirectURI  string `env:"GITHUB_REDIRECT_URI"`
+	}
 }
